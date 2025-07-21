@@ -100,14 +100,21 @@ Same as local:
   ./gradlew test
 ```
 
-Test frameworks used:
-- `Spock` for Groovy-based BDD-style specs
-- `JUnit 5` platform for test orchestration
+### ✅ Test & Coverage Frameworks Used
 
-Report path:
-```
-build/reports/tests/test/index.html
-```
+- `Spock` – Groovy-based BDD-style specifications
+- `JUnit 5` – For test execution and orchestration
+- `JaCoCo` – Code coverage analysis tool
+
+### 📁 Report Paths
+
+- **Test Results (HTML):**  
+  `build/reports/tests/test/index.html`
+ 
+- **Code Coverage Report (JaCoCo HTML):**  
+  `build/reports/jacoco/test/html/index.html`
+
+
 
 
 ---
