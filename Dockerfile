@@ -31,4 +31,4 @@ ENV JAVA_OPTS="\
 EXPOSE 8080
 
 # Run the Spring Boot app
-CMD ["sh", "-c", "java $JAVA_OPTS -jar build/libs/*.jar"]
+CMD ["sh", "-c", "java $JAVA_OPTS -jar build/libs/Products-0.0.1-SNAPSHOT.jar"]

@@ -36,7 +36,7 @@ It exposes a REST API backed by an in-memory **H2 database**, is documented with
 #### 2. Build the app
 
 ```bash
-./gradlew clean build
+  ./gradlew clean build
 ```
 
 This will:
@@ -47,7 +47,7 @@ This will:
 #### 3. Run the app
 
 ```bash
-java -jar build/libs/retail-technical-test-0.0.1-SNAPSHOT.jar
+  java -jar build/libs/retail-technical-test-0.0.1-SNAPSHOT.jar
 ```
 
 > Adjust the JAR name if needed – you can auto-complete it with `tab`.
@@ -65,7 +65,7 @@ java -jar build/libs/retail-technical-test-0.0.1-SNAPSHOT.jar
 #### 1. Build the Docker image
 
 ```bash
-docker build -t retail-app:latest .
+  docker build -t retail-app:latest .
 ```
 
 This:
@@ -76,13 +76,13 @@ This:
 #### 2. Run the container
 
 ```bash
-docker run -p 8080:8080 retail-app:latest
+  docker run -p 8080:8080 retail-app:latest
 ```
 
 Or run in detached mode:
 
 ```bash
-docker run -d -p 8080:8080 --name retail-container retail-app:latest
+  docker run -d -p 8080:8080 --name retail-container retail-app:latest
 ```
 
 #### 3. Access the app
@@ -97,7 +97,7 @@ Same as local:
 ## 🧪 Run Tests
 
 ```bash
-./gradlew test
+  ./gradlew test
 ```
 
 Test frameworks used:
@@ -153,12 +153,96 @@ These are compiled automatically during `./gradlew build`.
 ## 🔚 Stopping and Cleaning Up (Docker)
 
 ```bash
-docker stop retail-container
-docker rm retail-container
-docker rmi retail-app
+    docker stop retail-container
+    docker rm retail-container
+    docker rmi retail-app
 ```
 
 ---
+## Example Request
+
+```bash
+    curl -X 'POST' \
+      'http://localhost:8080/api/products/order' \
+      -H 'accept: */*' \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "salesByUnits": 0.4,
+        "stockRatio": 0.6
+    }'
+```
+## Expected Response (Example)
+
+```json
+    [
+  {
+    "id": 3,
+    "name": "RAISED PRINT T-SHIRT",
+    "score": 0.6492307692307692,
+    "salesUnits": 80,
+    "stock": {
+      "S": 20,
+      "L": 20,
+      "M": 2
+    }
+  },
+  {
+    "id": 2,
+    "name": "CONTRASTING FABRIC T-SHIRT",
+    "score": 0.6307692307692307,
+    "salesUnits": 50,
+    "stock": {
+      "S": 35,
+      "L": 9,
+      "M": 9
+    }
+  },
+  {
+    "id": 6,
+    "name": "SLOGAN T-SHIRT",
+    "score": 0.6123076923076923,
+    "salesUnits": 20,
+    "stock": {
+      "S": 9,
+      "L": 5,
+      "M": 2
+    }
+  },
+  {
+    "id": 4,
+    "name": "PLEATED T-SHIRT",
+    "score": 0.6018461538461538,
+    "salesUnits": 3,
+    "stock": {
+      "S": 25,
+      "L": 10,
+      "M": 30
+    }
+  },
+  {
+    "id": 5,
+    "name": "CONTRASTING LACE T-SHIRT",
+    "score": 0.6,
+    "salesUnits": 650,
+    "stock": {
+      "S": 0,
+      "L": 0,
+      "M": 1
+    }
+  },
+  {
+    "id": 1,
+    "name": "V-NECH BASIC SHIRT",
+    "score": 0.4615384615384615,
+    "salesUnits": 100,
+    "stock": {
+      "S": 4,
+      "L": 0,
+      "M": 9
+    }
+  }
+]
+```
 
 ## 📄 License
 
