@@ -1,0 +1,92 @@
+plugins {
+    id 'java'
+    id 'groovy'
+    id 'org.springframework.boot' version '3.5.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.openapi.generator' version '7.6.0'
+}
+
+group = 'com.inditex.ecommerce'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.2.34'
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.1'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.h2database:h2'
+    //implementation 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-4.0'
+    testImplementation 'org.spockframework:spock-spring:2.3-groovy-4.0'
+    testImplementation 'org.apache.groovy:groovy:4.0.15'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('compileTestGroovy') {
+    dependsOn tasks.named('classes')
+}
+
+tasks.named('compileJava') {
+    dependsOn tasks.named('openApiGenerate')
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$rootDir/openapi/product-ordering.yaml"
+    outputDir = "$buildDir/generated-sources/openapi"
+    apiPackage = "com.inditex.ecommerce.generated.api"
+    modelPackage = "com.inditex.ecommerce.generated.model"
+    configOptions = [
+            interfaceOnly         : "true",  // Solo interfaces (implementación manual)
+            useJakartaEe          : "true",  // Compatible con Spring Boot 3
+            skipDefaultInterface  : "true",  // No generes DefaultApi.java
+            generateApiUtil       : "false", // Elimina ApiUtil.java innecesario
+            useTags               : "true",  // Agrupa por tags de OpenAPI
+            unhandledException    : "true",  // Anota los métodos con `throws Exception`
+            dateLibrary           : "java8"  // Usa java.time en lugar de joda-time
+    ]
+    generateModelDocumentation = false
+    generateApiDocumentation = false
+    modelNameSuffix = "DTO"  // Opcional, para distinguir clases generadas
+}
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/generated-sources/openapi/src/main/java"
+        }
+    }
+}

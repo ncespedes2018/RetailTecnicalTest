@@ -1,0 +1,95 @@
+openapi: 3.0.4
+info:
+  title: API de Productos
+  version: 1.0.0
+  description: >
+    API centrada en productos. Permite consultar el catálogo de productos y ordenarlos
+    según criterios de negocio definidos por el consumidor.
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor local de desarrollo
+
+paths:
+
+  /api/products/order:
+    post:
+      summary: Ordena productos según criterios ponderados
+      operationId: orderProducts
+      tags:
+        - Productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoringWeightsRequest'
+      responses:
+        '200':
+          description: Lista de productos ordenados por puntuación total
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductScoreResponse'
+
+components:
+  schemas:
+    ScoringWeightsRequest:
+      type: object
+      description: Pesos relativos usados para calcular la puntuación de ordenación de productos.
+      properties:
+        salesByUnits:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          description: Peso relativo para el criterio "ventas por unidades".
+          example: 0.4
+        stockRatio:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          description: Peso relativo para el criterio "ratio de stock disponible".
+          example: 0.6
+      required:
+        - salesByUnits
+        - stockRatio
+      example:
+        salesByUnits: 0.4
+        stockRatio: 0.6
+
+    ProductScoreResponse:
+      type: object
+      description: Producto con puntuación calculada y detalle de stock.
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        score:
+          type: number
+          format: double
+        salesUnits:
+          type: integer
+        stock:
+          $ref: '#/components/schemas/Stock'
+      required:
+        - id
+        - name
+        - score
+        - salesUnits
+        - stock
+
+    Stock:
+      type: object
+      description: Mapa de tallas con sus unidades en stock.
+      additionalProperties:
+        type: integer
+      example:
+        S: 10
+        M: 5
+        L: 0
